@@ -1,6 +1,10 @@
 <?php
+
 if(isset($_POST['function'])) {
     $function = $_POST['function'];
+
+    require_once 'config.php';
+
     if(!empty($function)) {
         switch($function) {
             case $function === "search": call_user_func($function, $_POST['title']); break;
@@ -11,7 +15,7 @@ if(isset($_POST['function'])) {
 }
 
 function search($title) {
-    $query = "https://api.themoviedb.org/3/search/movie?api_key=44cb09a225e850bc9a5952bb01fd6c95&language=en-US&query=".$title."&page=1&include_adult=true";
+    $query = "https://api.themoviedb.org/3/search/movie?api_key=".API_KEY."&language=en-US&query=".$title."&page=1&include_adult=true";
     $movies = json_decode(file_get_contents($query));
     if($movies->total_results == 0) {
         echo json_encode("false");
@@ -39,7 +43,7 @@ function search($title) {
 }
 
 function nextPage($title, $page) {
-    $query = "https://api.themoviedb.org/3/search/movie?api_key=44cb09a225e850bc9a5952bb01fd6c95&language=en-US&query=".$title."&page=".$page."&include_adult=true";
+    $query = "https://api.themoviedb.org/3/search/movie?api_key=".API_KEY."&language=en-US&query=".$title."&page=".$page."&include_adult=true";
     $movies = json_decode(file_get_contents($query));
     if($movies->total_results === 0) {
         echo json_encode("false");

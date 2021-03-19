@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
        <!-- <link rel="stylesheet" href="style.css">-->
-       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://kit.fontawesome.com/44af24657a.js" crossorigin="anonymous"></script>
@@ -38,28 +38,7 @@
                 });
             });
         });
-        $(document).ready(function() {
-            $('a').click( function() {
-            console.log('movierequest');
-                jQuery.ajax({
-                    type: 'post',
-                    url: 'api.php',
-                    data: {function: "search", title: document.getElementById('title').value, page: e.value},
-                    success: function(data) {
-                        console.log('success');
-                        console.log(data);
-                        console.log(JSON.parse(data));
-                        document.getElementById('movies-container').innerHTML='';
-                        listMovies(JSON.parse(data));
-                    },
-                    error: function(data) {
-                        console.log(data);
-                    }
-                });
-            });
-        });
-            
-        </script>
+    </script>
     </head>
     <body>
         <div class="container">
@@ -100,8 +79,9 @@
         };
 
         function movieRequest() {
-            if(currentPageNumber < pageCount)
+            if(currentPageNumber < pageCount) {
                 currentPageNumber++;
+            }
             console.log('movierequest');
                 jQuery.ajax({
                     type: 'post',
@@ -117,26 +97,7 @@
                         console.log(data);
                     }
                 });
-            }
-/*
-        function showPageNumbers() {
-            let pageNumberContainer = document.getElementById('pageNumber-container');
-            
-            for (let i = 0; i < pageCount; i++) {
-                let pageNumber = document.createElement('a');
-                pageNumber.value = i+1;
-                pageNumber.innerHTML = i+1;
-                pageNumber.classList.add('pageNumber');
-                pageNumber.style.cursor = 'pointer';
-                pageNumber.addEventListener('onclick', function() {
-                    currentPageNumber = this.value;
-                    movieRequest();
-                });
-                pageNumberContainer.appendChild(pageNumber);
-                console.log('done');
-            }
         }
-        */
         function firstResult(data) {
             currentTitle = document.getElementById('title').value;
             pageCount = data.pageCount;
@@ -193,35 +154,6 @@
                 card.appendChild(card_img);
                 movieContainer.appendChild(card);
             });
-            /*
-            let movies = document.getElementById('movies-container');
-            let arr = data.movies;
-            Array.from(data.movies).forEach(e => {
-                let card = document.createElement("div");
-                card.classList.add("card");
-                card.classList.add("mb-3");
-
-                let card_body = document.createElement("div");
-                card_body.classList.add("card-body");
-
-                let card_img = document.createElement("div");
-                card_img.classList.add("card-img-top");
-
-                let poster = document.createElement("img");
-                poster.style.maxHeight = "300px";
-                poster.style.maxWidth = "200px";
-                poster.src = "https://image.tmdb.org/t/p/w500"+e.image;
-
-                let title = document.createElement("h4");
-                title.innerHTML = e.original_title;
-
-                card_img.appendChild(poster);
-                card_body.appendChild(title);
-                card.appendChild(card_body);
-                card.appendChild(card_img);
-                movies.appendChild(card);
-            });
-            */
         }
     </script>
     <!--END of Scripts-->
