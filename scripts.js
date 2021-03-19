@@ -79,23 +79,16 @@ function showMovies() {
         let card_img = document.createElement("div");
         card_img.classList.add("card-img-top");
 
-        let imageUrl = "https://image.tmdb.org/t/p/w500"+element.image;
-        let request = new XMLHttpRequest();
-        request.open("GET", imageUrl, true);
-        request.send();
-        request.onload = function() {
-            console.log(request.status);
-            if(request.status != 200) {
-                imageUrl = "notFoundImage.jpg";
-            }
-        }
-
-
         let poster = document.createElement("img");
         poster.onerror = imageNotFound(this);
-        poster.style.maxHeight = "300px";
-        poster.style.maxWidth = "200px";
-        poster.src = imageUrl;
+        poster.style.height = "300px";
+        poster.style.width = "200px";
+
+        if(element.image == null) {
+            poster.src = "notfoundimage1.jpg";
+        } else {
+            poster.src = "https://image.tmdb.org/t/p/w500"+element.image;
+        }
 
         let title = document.createElement("h4");
         title.innerHTML = element.original_title;
@@ -107,12 +100,5 @@ function showMovies() {
 
         setTimeout(() => movieContainer.appendChild(card), 100 * multiplier);
         multiplier++;
-        //movieContainer.appendChild(card);
-
     });
-}
-function imageNotFound(image) {
-    image.onerror = '';
-    image.src = "notFoundImage.jpg";
-    return true;
 }
