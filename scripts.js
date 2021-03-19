@@ -80,7 +80,6 @@ function showMovies() {
         card_img.classList.add("card-img-top");
 
         let poster = document.createElement("img");
-        poster.onerror = imageNotFound(this);
         poster.style.height = "300px";
         poster.style.width = "200px";
 
