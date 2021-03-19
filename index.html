@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Search Movie</title>
+        <meta charset="utf8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+       <!-- <link rel="stylesheet" href="style.css">-->
+       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://kit.fontawesome.com/44af24657a.js" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <!--JQuery-->
+        <script>
+        $(function() {
+            $('form').on('submit', function(e) {
+                e.preventDefault();
+                console.log($('form').serialize());
+                jQuery.ajax({
+                    type: 'post',
+                    url: 'api.php',
+                    data: {function: "search", title: document.getElementById('title').value},
+                    success: function(data) {
+                        console.log('success');
+                        console.log(data);
+                        console.log(JSON.parse(data));
+                        document.getElementById('movies-container').innerHTML='';
+
+                        clearMovies();
+                        firstResult(JSON.parse(data));
+                    },
+                    error: function(data) {
+                        console.log(data);
+                    }
+                });
+            });
+        });
+        $(document).ready(function() {
+            $('a').click( function() {
+            console.log('movierequest');
+                jQuery.ajax({
+                    type: 'post',
+                    url: 'api.php',
+                    data: {function: "search", title: document.getElementById('title').value, page: e.value},
+                    success: function(data) {
+                        console.log('success');
+                        console.log(data);
+                        console.log(JSON.parse(data));
+                        document.getElementById('movies-container').innerHTML='';
+                        listMovies(JSON.parse(data));
+                    },
+                    error: function(data) {
+                        console.log(data);
+                    }
+                });
+            });
+        });
+            
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <form class="form" id="search-form" method="POST">
+                        <div class="form-group">
+                            <input class="form-control" id="title" type="text" name="title">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <button onclick="clearMovies()">reset</button>
+            <div class="row">
+                <div id="movies-container" class="col-12">
+                    <!-- CONTENT -->
+                </div>
+            </div>
+        </div>
+
+    </body>
+    <!--Scripts-->
+    <script>
+        let movieList = [];
+        let currentTitle = '';
+        let pageCount = 0;
+        let currentPageNumber = 1;
+
+        const movieContainer = document.getElementById('movies-container');
+
+        window.onscroll = function(event) {
+            if((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+                movieRequest()
+            }
+        };
+
+        function movieRequest() {
+            if(currentPageNumber < pageCount)
+                currentPageNumber++;
+            console.log('movierequest');
+                jQuery.ajax({
+                    type: 'post',
+                    url: 'api.php',
+                    data: {function: "nextPage", title: currentTitle, page: currentPageNumber},
+                    success: function(data) {
+                        console.log('success');
+                        console.log(data);
+                        console.log(JSON.parse(data));
+                        nextResult(JSON.parse(data));
+                    },
+                    error: function(data) {
+                        console.log(data);
+                    }
+                });
+            }
+/*
+        function showPageNumbers() {
+            let pageNumberContainer = document.getElementById('pageNumber-container');
+            
+            for (let i = 0; i < pageCount; i++) {
+                let pageNumber = document.createElement('a');
+                pageNumber.value = i+1;
+                pageNumber.innerHTML = i+1;
+                pageNumber.classList.add('pageNumber');
+                pageNumber.style.cursor = 'pointer';
+                pageNumber.addEventListener('onclick', function() {
+                    currentPageNumber = this.value;
+                    movieRequest();
+                });
+                pageNumberContainer.appendChild(pageNumber);
+                console.log('done');
+            }
+        }
+        */
+        function firstResult(data) {
+            currentTitle = document.getElementById('title').value;
+            pageCount = data.pageCount;
+            currentPageNumber = 1;
+
+            console.log(data);
+
+            addMovies(data.movies);
+            showMovies();
+            //showPageNumbers();
+        }
+        function nextResult(data) {
+            currentPageNumber = data.currentPage;
+
+            addMovies(data.movies);
+            showMovies();
+        }
+        
+        function addMovies(movies) {
+            movieList.push(movies);
+        }
+
+        function clearMovies() {
+            let movies = document.getElementById('movies-container');
+            movies.innerHTML='';
+        }
+        
+        function showMovies() {
+            //let movies = document.getElementById('movies-container');
+            //let arr = data.movies;
+
+            Array.from(movieList[currentPageNumber-1]).forEach(element => {
+                let card = document.createElement("div");
+                card.classList.add("card");
+                card.classList.add("mb-3");
+
+                let card_body = document.createElement("div");
+                card_body.classList.add("card-body");
+
+                let card_img = document.createElement("div");
+                card_img.classList.add("card-img-top");
+
+                let poster = document.createElement("img");
+                poster.style.maxHeight = "300px";
+                poster.style.maxWidth = "200px";
+                poster.src = "https://image.tmdb.org/t/p/w500"+element.image;
+
+                let title = document.createElement("h4");
+                title.innerHTML = element.original_title;
+
+                card_img.appendChild(poster);
+                card_body.appendChild(title);
+                card.appendChild(card_body);
+                card.appendChild(card_img);
+                movieContainer.appendChild(card);
+            });
+            /*
+            let movies = document.getElementById('movies-container');
+            let arr = data.movies;
+            Array.from(data.movies).forEach(e => {
+                let card = document.createElement("div");
+                card.classList.add("card");
+                card.classList.add("mb-3");
+
+                let card_body = document.createElement("div");
+                card_body.classList.add("card-body");
+
+                let card_img = document.createElement("div");
+                card_img.classList.add("card-img-top");
+
+                let poster = document.createElement("img");
+                poster.style.maxHeight = "300px";
+                poster.style.maxWidth = "200px";
+                poster.src = "https://image.tmdb.org/t/p/w500"+e.image;
+
+                let title = document.createElement("h4");
+                title.innerHTML = e.original_title;
+
+                card_img.appendChild(poster);
+                card_body.appendChild(title);
+                card.appendChild(card_body);
+                card.appendChild(card_img);
+                movies.appendChild(card);
+            });
+            */
+        }
+    </script>
+    <!--END of Scripts-->
+</html>
