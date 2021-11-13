@@ -5,40 +5,79 @@
         <meta charset="utf8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
-        <link rel="stylesheet" href="style.css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <!--
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link rel="stylesheet" href="style.css">
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://kit.fontawesome.com/44af24657a.js" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <!--
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        -->
     </head>
     <body>
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="form" id="search-form">
-                        <div class="form-group">
-                            <input class="form-control" id="title" type="text">
-                        </div>
-                        <div class="form-group">
-                            <button class="btn btn-primary" onclick="startSearch()">Search</button>
-                        </div>
-                    </div>
+        <div id="search-form">
+            <div>
+                <div class="form-group">
+                    <input class="form-control" id="title" type="text">
                 </div>
-            </div>
-            <button onclick="clearMovies()">reset</button>
-            <div class="row">
-                <div id="movies-container" class="col-12">
-                    <!-- CONTENT -->
+                <div class="form-group">
+                    <button class="btn btn-primary" onclick="setParams()">Search</button>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-danger" onclick="clearMovies()"><i class="fa fa-refresh" aria-hidden="true"></i></button>
                 </div>
             </div>
         </div>
+        <div class="container">
+            <!--<div class="row" id="search-form">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <input class="form-control" id="title" type="text">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <button class="btn btn-primary" onclick="setParams()">Search</button>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <button class="btn btn-danger" onclick="clearMovies()"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+            </div>-->
+            <div id="movies-container" class="row row-cols-1 row-cols-xl-2  g-4">
+                <!-- CONTENT -->
+            </div>
+        </div>
+        <!-- ////////// TEMPLATE ////////// -->
+        <template id="movie-template">
+            <div class="movie col">
+                <div class="card card-ani">
+                    <img class="card-img-top img" src="" alt="Card image cap">
+                    <div class="card-body">
+                        <label>English Title:</label>
+                        <h5 class="card-title"></h5>
+                        <label>Original Title:</label>
+                        <h6 class="original-title"></h6>
+                        <hr>
+                        <div class="description"></div>
+                    </div>
+                    <div class="rating"></div>
+                </div>
+            </div>
+        </template>
+        <!-- ////////// END of TEMPLATE ////////// -->
 
+        <!-- ////////// SCRIPTS ////////// -->
+        <script src="scripts.js"></script>
+        <!-- ////////// END of SCRIPTS ////////// -->
     </body>
-    <!--Scripts-->
-    <script src="scripts.js"></script>
-    <!--END of Scripts-->
 </html>

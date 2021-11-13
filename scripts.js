@@ -1,103 +1,101 @@
-let movieList = [];
-let currentTitle = '';
-let pageCount = 0;
-let currentPageNumber = 1;
+const image_link = "https://image.tmdb.org/t/p/w500"; // for image link
+const movieList = [];       // stored movie request result page by page
+let is_requesting = false; 
+let currentTitle = '';      // current search value
+let pageCount = 0;          // number of pages
+let currentPageNumber = 1;  // current page number
 
-const movieContainer = document.getElementById('movies-container');
+const movie_con = document.getElementById('movies-container'); // card/movie container
+const input_field = document.getElementById('title');               // movie search field
+const templates = {
+    movie_template: document.getElementById("movie-template").content.querySelector(".movie"),
+};
 
-window.onscroll = function(event) {
-    if((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-        if(currentPageNumber < pageCount ) {
-            currentPageNumber++;
-            movieRequest();
-        } else if( currentPageNumber > pageCount) {
-            console.log("Error: current page number is higher than the maximum of pages!");
+document.addEventListener("DOMContentLoaded", (e) => {
+    currentTitle = JSON.parse(window.localStorage.getItem('title'));
+    search();
+});
+
+// load more contant by scrolling down
+window.onscroll = function(e) {
+    if((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100) {
+        if(currentPageNumber < pageCount) {
+            search();
         }
     }
 };
-
-function startSearch() {
-    if(document.getElementById('title').value == "") {
-        console.log("Search field is empty!");
-    } else if(document.getElementById('title').value != "") {
-
-        currentTitle = document.getElementById('title').value;
-        currentPageNumber = 1;
-        pageCount = 0;
-
-        clearMovies();
-        movieRequest();
+window.onkeyup = function(e) {
+    if(e.keyCode === 13) { // search on enter
+        e.preventDefault();
+        setParams();
     }
 }
-function movieRequest() {
-    jQuery.ajax({
-        type: 'post',
-        url: 'api.php',
-        data: {title: currentTitle, page: currentPageNumber},
-        success: function(data) {
-            console.log('success');
 
-            let result = JSON.parse(data);
+// set params to default
+function setParams() {
+    // check if empty
+    if(input_field.value == "") {
+        alert("Search field is empty!");
+    } else {
+        // set search value
+        currentTitle = input_field.value;
+        window.localStorage.setItem('title', JSON.stringify(currentTitle)); // save on local 
 
-            if(currentTitle == "") {
-                currentTitle = document.getElementById('title').value;
-            }
-            pageCount = result.pageCount;
+        // reset value
+        currentPageNumber = 1;
+        pageCount = 0;
+        movie_con.innerHTML='';
+        movieList.length = 0;
 
-            //console.log(result);
+        // send request
+        search();
+    }
+}
 
-            addMovies(result.movies);
-            showMovies();
-        },
-        error: function(data) {
-            console.log(data);
+// get movies by name and page
+async function search() {
+    if(!is_requesting) {
+        is_requesting = true;
+        const response = await sendRequest({title: currentTitle, page: currentPageNumber});
+        if(currentPageNumber < pageCount)
+            currentPageNumber++;
+        if("error" in response ) {
+            alert(response.error);
+        } else if(response.movies !== []) {
+            pageCount = response.total_pages;
+            movieList.push(response.movies);
+            generateMovies();
         }
+        is_requesting = false;
+    }
+}
+
+// send request with parameters
+function sendRequest(params) {
+    return new Promise((res,rej) => {
+        jQuery.ajax({
+            type: "POST",
+            url: "api.php",
+            data: params,
+            success: function(result) {
+                res(JSON.parse(result))
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        })
     });
 }
 
-function addMovies(movies) {
-    movieList.push(movies);
-}
-
-function clearMovies() {
-    let movies = document.getElementById('movies-container');
-    movies.innerHTML='';
-    movieList = [];
-}
-
-function showMovies() {
-    let multiplier = 0;
-    Array.from(movieList[currentPageNumber-1]).forEach(element => {
-        let card = document.createElement("div");
-        card.classList.add("card");
-        card.classList.add("mb-3");
-        card.classList.add("card-ani");
-
-        let card_body = document.createElement("div");
-        card_body.classList.add("card-body");
-
-        let card_img = document.createElement("div");
-        card_img.classList.add("card-img-top");
-
-        let poster = document.createElement("img");
-        poster.style.height = "300px";
-        poster.style.width = "200px";
-
-        if(element.image == null) {
-            poster.src = "notfoundimage1.jpg";
-        } else {
-            poster.src = "https://image.tmdb.org/t/p/w500"+element.image;
-        }
-
-        let title = document.createElement("h4");
-        title.innerHTML = element.original_title;
-
-        card_img.appendChild(poster);
-        card_body.appendChild(title);
-        card.appendChild(card_body);
-        card.appendChild(card_img);
-
-        setTimeout(() => movieContainer.appendChild(card), 100 * multiplier);
-        multiplier++;
+// generate movies elements
+function generateMovies() {
+    Array.from(movieList[currentPageNumber-1]).map(m => {
+        const movie = templates.movie_template.cloneNode(true);
+        movie.querySelector(".card-title").innerHTML = m.title;
+        movie.querySelector(".original-title").innerHTML = m.original_title;
+        movie.querySelector(".img").src =  "image" in m && m.image !== null ? `https://image.tmdb.org/t/p/w500${m.image}` : "notfoundimage1.jpg";
+        movie.querySelector(".description").innerHTML = m.description;
+        movie.querySelector(".rating").innerHTML = m.rating.length === 1 ? `${m.rating}.0` : m.rating;
+        movie_con.append(movie);
     });
 }
