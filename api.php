@@ -42,5 +42,31 @@ function searchForMovies($title, $page) {
     echo json_encode($result, true);
     exit();
 }
-//echo "<button click=ondelete([{$row['asd']}])>"
+
+class Movie {
+    private $poster;
+    private $original_title;
+    private $translated_title;
+    private $release_date;
+    private $description;
+    private $rating;
+
+    public function getPoster() {return $this->poster;}
+    public function getOriginalTitle() {return $this->original_title;}
+    public function getTranslatedTitle() {return $this->translated_title;}
+    public function getReleaseDate() {return $this->release_date;}
+    public function getDescription() {return $this->description;}
+    public function getRating() {return $this->rating;}
+
+    public function __construct($data) {
+        $this->poster = $data->poster_path;
+        $this->original_title = $data->original_title;
+        $this->translated_title = $data->title;
+        $this->release_date = isset($data->release_date) ? $data->release_date : null;
+        $this->description = $data->overview;
+        $this->rating = strval($data->vote_average);
+    }
+
+
+}
 ?>
