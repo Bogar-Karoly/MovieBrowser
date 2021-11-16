@@ -47,6 +47,8 @@ body {
 }
 .card .description {
     font-size: 12px;
+    height: 164px;
+    overflow: hidden;
 }
 .card:not(:last-child) {
     margin-bottom: 10px;
@@ -79,24 +81,7 @@ body {
 .card h5, .card h6 {
     padding-left: 5px;
 }
-
-#title {
-    width: 450px;
-}
-
-/*
-@keyframes zoominoutsinglefeatured {
-    0% {
-        transform: scale(0.1,0.11);
-    }
-    50% {
-        transform: scale(1.1,1.1);
-    }
-    100% {
-        transform: scale(1,1);
-    }
-}*/
-@keyframes zoominoutsinglefeatured {
+@keyframes zoominout {
     0% {
         transform: scale(0.1,0.1);
     }
@@ -109,7 +94,7 @@ body {
 }
 
 .card-ani {
-    animation: zoominoutsinglefeatured 1s;
+    animation: zoominout 1s;
 }
 
 @media only screen and (max-width: 975px) {
@@ -133,7 +118,7 @@ body {
         margin-top: 8px;
     }
     .card-ani {
-        animation: zoominoutsinglefeatured_small 1s;
+        animation: zoominout 1s;
 
     }
 }
