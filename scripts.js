@@ -27,12 +27,12 @@ window.onscroll = function(e) {
 window.onkeyup = function(e) {
     if(e.keyCode === 13) { // search on enter
         e.preventDefault();
-        setParams();
+        prepare();
     }
 }
 
 // set params to default
-function setParams() {
+function prepare() {
     // check if empty
     if(input_field.value == "") {
         alert("Search field is empty!");
@@ -59,11 +59,11 @@ async function search() {
         const response = await sendRequest({title: currentTitle, page: currentPageNumber});
         if(currentPageNumber < pageCount)
             currentPageNumber++;
-        if("error" in response ) {
-            alert(response.error);
-        } else if(response.movies !== []) {
-            pageCount = response.total_pages;
-            movieList.push(response.movies);
+        if(response.result === false) {
+            alert(response.data);
+        } else if(response.data !== []) {
+            pageCount = response.data.total_pages;
+            movieList.push(response.data.results);
             generateMovies();
         }
         is_requesting = false;
@@ -93,9 +93,9 @@ function generateMovies() {
         const movie = templates.movie_template.cloneNode(true);
         movie.querySelector(".card-title").innerHTML = m.title;
         movie.querySelector(".original-title").innerHTML = m.original_title;
-        movie.querySelector(".img").src =  "image" in m && m.image !== null ? `https://image.tmdb.org/t/p/w500${m.image}` : "notfoundimage1.jpg";
-        movie.querySelector(".description").innerHTML = m.description;
-        movie.querySelector(".rating").innerHTML = m.rating.length === 1 ? `${m.rating}.0` : m.rating;
+        movie.querySelector(".img").src =  "poster_path" in m && m.poster_path !== null ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : "notfoundimage1.jpg";
+        movie.querySelector(".description").innerHTML = m.overview;
+        movie.querySelector(".rating").innerHTML = m.vote_average.length === 1 ? `${m.vote_average}.0` : m.vote_average;
         movie_con.append(movie);
     });
 }
