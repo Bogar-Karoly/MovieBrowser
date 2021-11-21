@@ -24,29 +24,64 @@
                     <button class="btn btn-primary" onclick="prepare()">Search</button>
                 </div>
                 <div class="col-auto form-group">
-                    <button class="btn btn-danger" onclick="clearMovies()"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+                    <button class="btn btn-danger" onclick="resetSearch()"><i class="fa fa-refresh" aria-hidden="true"></i></button>
                 </div>
             </div>
         </div>
         <div class="container">
-            <div id="movies-container" class="row row-cols-1 row-cols-xl-2  g-4">
+            <div id="movies-container" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6 g-4">
                 <!-- CONTENT -->
             </div>
         </div>
         <!-- ////////// TEMPLATE ////////// -->
         <template id="movie-template">
             <div class="movie col">
-                <div class="card card-ani">
-                    <img class="card-img-top img" src="" alt="Card image cap">
+                <div class="card card-ani m-auto">
                     <div class="card-body">
-                        <label>English Title:</label>
-                        <h5 class="card-title"></h5>
-                        <label>Original Title:</label>
-                        <h6 class="original-title"></h6>
-                        <hr>
-                        <div class="description"></div>
+                        <h6 class="card-title"></h6>
                     </div>
                     <div class="rating"></div>
+                </div>
+            </div>
+        </template>
+        <template id="moviefull-template">
+            <div class="moviefull-background">
+                <div class="moviefull-window">
+                    <div class="moviefull container">
+                        <div class="row">
+                            <div class="col-auto">
+                                <img class="img" src="" alt="">
+                            </div>
+                            <div class="col col-md">
+                                <div class="group">
+                                    <label>English Title:</label>
+                                    <h5 class="card-title"></h5>
+                                </div>
+                                <div class="group">
+                                    <label>Original Title:</label>
+                                    <h5 class="original-title"></h5>
+                                </div>
+                                <div class="group">
+                                    <label>Release date:</label>
+                                    <h5 class="release-date"></h5>
+                                </div>
+                                <div class="group">
+                                    <label>Rating:</label>
+                                    <h5 class="rating"></h5>
+                                </div>
+                                <div class="group">
+                                    <label>Popularity:</label>
+                                    <h5 class="popularity"></h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col description">
+                                <div class="description"></div>
+                            </div>
+                        </div>
+                        <button class="close btn-danger btn">X</button>
+                    </div>
                 </div>
             </div>
         </template>
