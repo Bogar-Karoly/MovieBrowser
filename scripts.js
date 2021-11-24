@@ -1,6 +1,6 @@
 const image_link = "https://image.tmdb.org/t/p/w500"; // for image link
 const movieList = [];       // stored movie request result page by page
-const body = document.querySelector("body");
+
 let is_requesting = false; 
 let currentTitle = '';      // current search value
 let pageCount = 0;          // number of pages
@@ -108,8 +108,12 @@ function resetSearch() {
 }
 function generateMovieCard(m) {
     const movie = templates.movie_template.cloneNode(true);
-    //movie.querySelector(".card-title").innerHTML = m.title;
-    movie.querySelector(".card").style.backgroundImage = "poster_path" in m && m.poster_path !== null ? `url('https://image.tmdb.org/t/p/w500${m.poster_path}')` : "url('notfoundimage1.jpg')";
+    if("poster_path" in m && m.poster_path !== null) {
+        movie.querySelector(".card").style.backgroundImage = `url('https://image.tmdb.org/t/p/w500${m.poster_path}')`
+    } else {
+        movie.querySelector(".card").style.backgroundImage = "url('notfoundimage1.jpg')";
+        movie.querySelector(".card-title").innerHTML = m.title;
+    }
     movie.addEventListener("click", ()=> {generateMovieFull(m)});
     movie_con.append(movie);
 }
@@ -118,13 +122,11 @@ function generateMovieFull(m) {
     const movie = templates.moviefull_template.cloneNode(true);
     movie.querySelector(".card-title").innerHTML = m.title;
     movie.querySelector(".original-title").innerHTML = m.original_title;
-    movie.querySelector(".img").src =  "poster_path" in m && m.poster_path !== null ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : "notfoundimage1.jpg";
+    movie.querySelector(".img").src = "poster_path" in m && m.poster_path !== null ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : "notfoundimage1.jpg";
     movie.querySelector(".description").innerHTML = m.overview;
     movie.querySelector(".release-date").innerHTML = m.release_date;
     movie.querySelector(".popularity").innerHTML = m.popularity;
-
     movie.querySelector(".rating").innerHTML = m.vote_average.toString().length === 1 ? `${m.vote_average}.0` : m.vote_average;
     movie.querySelector(".close").addEventListener("click", () => { movie.remove(); });
     document.querySelector("body").append(movie);
-    console.log(m);
 }

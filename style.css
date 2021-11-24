@@ -5,6 +5,10 @@
 body {
     background-color: var(--primary-background-color) !important;
 }
+body>.container {
+    padding-top: 70px;
+    padding-bottom: 20px;
+}
 #search-form {
     margin: 0px auto 0px auto;
     max-width: 600px;
@@ -22,11 +26,42 @@ body {
 #search-form>div {
     flex-direction: row;
     display: flex;
+    margin:0;
 }
-body>.container {
-    padding-top: 70px;
-    padding-bottom: 20px;
+#search-form input {
+    background-color: grey;
+    border: 0;
+    height: 100%;
 }
+#search-form .search {
+    background-color: grey;
+    border-color: grey;
+    height: 38px;
+    width: 42px;
+}
+#search-form .search:hover {
+    background-color: var(--primary-background-color) !important;
+    border-color: inherit;
+    box-shadow: unset;
+}
+#search-form .search:focus {
+    border-color: inherit;
+    box-shadow: unset;
+    border: unset;
+}
+#search-form .search:hover i {
+    color: grey;
+}
+#search-form .form-group {
+    padding: 0;
+}
+#search-form .form-group:not(:last-child) {
+    padding-right: 10px;
+}
+.form-control:focus {
+    box-shadow: 0 0 0 0.25rem var(--primary-background-color);
+}
+
 /* MOVIE */
 .movie .card {
     width: 200px;
@@ -44,6 +79,7 @@ body>.container {
 
 /* MOVIE-FULL */
 .moviefull-background {
+    animation: fadeIn 0.25s linear;
     position: fixed;
     background-color: rgba(0, 0, 0, 0.5);
     top: 0;
@@ -161,6 +197,14 @@ body>.container {
     }
     100% {
         transform: scale(1.1,1.1);
+    }
+}
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
     }
 }
 .card-ani {
